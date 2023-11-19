@@ -417,6 +417,10 @@ pub fn init_async_colliders(
 ) {
     for (entity, mesh_handle, async_collider) in async_colliders.iter() {
         if let Some(mesh) = meshes.get(mesh_handle) {
+            if mesh.count_vertices() == 0 {
+                commands.entity(entity).remove::<AsyncCollider>();
+                continue;
+            }
             let collider = match &async_collider.0 {
                 ComputedCollider::TriMesh => Collider::trimesh_from_mesh(mesh),
                 ComputedCollider::TriMeshWithFlags(flags) => {
